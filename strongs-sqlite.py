@@ -35,6 +35,9 @@ class StrongsHebrewParser(xml.sax.handler.ContentHandler):
         self.in_foreign = False
         self.note_depth = 0
         self.in_entry = False
+        self.in_deriv = False
+        self.in_defin = False
+        self.in_trans = False
         self.db = db
         self.reset_vars()
 
@@ -43,11 +46,15 @@ class StrongsHebrewParser(xml.sax.handler.ContentHandler):
         self.lemma = ""
         self.xlit = ""
         self.pronounce = ""
-        self.description = ""
+        self.deriv = ""
+        self.defin = ""
+        self.trans = ""
+        self.buffer = ""
 
     def addRow(self):
-       print "%s|%s|%s|%s|%s" % (self.number, self.lemma, self.xlit,
-                              self.pronounce, self.description)
+       print "%s|%s|%s|%s|%s|%s|%s" % (self.number, self.lemma, self.xlit,
+                              self.pronounce, self.deriv, self.defin, 
+                                       self.trans)
        self.reset_vars()
 
     def startElement(self, name, attrs):
@@ -58,6 +65,12 @@ class StrongsHebrewParser(xml.sax.handler.ContentHandler):
 
         if name == "note":
             self.note_depth +=1
+            if attrs.getValue("type") == "exegesis":
+                self.in_deriv = True
+            elif attrs.getValue("type") == "explanation":
+                self.in_defin = True
+            elif attrs.getValue("type") == "translation":
+                self.in_trans = True
 
         if name == "div" and attrs.getValue("type") == "entry":
             self.in_entry = True
@@ -68,11 +81,18 @@ class StrongsHebrewParser(xml.sax.handler.ContentHandler):
             self.xlit = attrs.getValue("xlit")
             self.pronounce = attrs.getValue("POS")
 
+        if name == "w" and self.note_depth > 0:
+            if "lemma" in attrs.getNames():
+                self.buffer += attrs.getValue("lemma")
+            else:
+                self.buffer += attrs.getValue("POS")
+            
+
     def characters(self, data):
         """Actions for characters within tags"""
 
         if self.note_depth > 0:
-            self.description += data.replace("\n"," ")
+            self.buffer += data
 
     def endElement(self, name):
         """Actions for closing tags."""
@@ -82,6 +102,20 @@ class StrongsHebrewParser(xml.sax.handler.ContentHandler):
 
         if name == "note":
             self.note_depth -=1
+            # If we exit a note completely, close the note types
+            if self.note_depth == 0:
+                if self.in_deriv:
+                    self.deriv = self.buffer
+                elif self.in_defin:
+                    self.defin = self.buffer
+                elif self.in_trans:
+                    self.trans = self.buffer
+                # All note types can be closed, and buffer reset
+                self.buffer = ""
+                self.in_deriv = False
+                self.in_defin = False
+                self.in_trans = False
+            
 
         if name == "div" and self.in_entry == True:
             # Commit to db when each word's div tag is closed
