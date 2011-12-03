@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 import xml.sax
 
-hebrew_xml_file = ('../openscriptures/strongs/hebrew/StrongHebrewG.xml')
+hebrew_xml_file = ('../strongs/hebrew/StrongHebrewG.xml')
 
 class StrongsParser(xml.sax.handler.ContentHandler):
     """Class to parse the Strongs xml files.
@@ -13,11 +13,19 @@ class StrongsParser(xml.sax.handler.ContentHandler):
         self.in_note = False
         self.in_entry = False
         self.db = db
+        self.reset_vars()
 
-#    def addRow(self):
- #       print "%s|%s|%s|%s" % (self.number, self.lemma, self.xlit,
-   #                              self.pronounce)
-  #      self.reset_vars()
+    def reset_vars(self):
+        self.number = ""
+        self.lemma = ""
+        self.xlit = ""
+        self.pronounce = ""
+        self.description = ""
+
+    def addRow(self):
+       print "%s|%s|%s|%s|%s" % (self.number, self.lemma, self.xlit,
+                              self.pronounce, self.description)
+       self.reset_vars()
 
     def startElement(self, name, attrs):
         """Actions for opening tags."""
@@ -33,17 +41,16 @@ class StrongsParser(xml.sax.handler.ContentHandler):
         
         if name == "w" and self.in_foreign == False and self.in_note == False:
             #TODO need to find a way to screen for nested <note> tags
-            number = attrs.getValue("ID")
-            lemma = attrs.getValue("lemma")
-            xlit = attrs.getValue("xlit")
-            pronounce = attrs.getValue("POS")
-            print "%s|%s|%s|%s" % (number, lemma, xlit, pronounce)
+            self.number = attrs.getValue("ID")
+            self.lemma = attrs.getValue("lemma")
+            self.xlit = attrs.getValue("xlit")
+            self.pronounce = attrs.getValue("POS")
 
-#    def characters(self, data):
- #       """Actions for characters within tags"""
+    def characters(self, data):
+        """Actions for characters within tags"""
 
-  #      if self.in_note:
-   #         self.description += data
+        if self.in_note:
+            self.description += data.replace("\n"," ")
 
     def endElement(self, name):
         """Actions for closing tags."""
@@ -57,7 +64,7 @@ class StrongsParser(xml.sax.handler.ContentHandler):
         if name == "div" and self.in_entry == True:
             # Commit to db when each word's div tag is closed
             # Have to differentiate the type, since there is a div supertag.
- #           self.addRow()
+            self.addRow()
             self.in_entry = False
 
 if __name__ == "__main__":
