@@ -27,9 +27,7 @@ hebrew_xml_file = '../strongs/hebrew/StrongHebrewG.xml'
 greek_xml_file = '../strongs/greek/StrongsGreekDictionaryXML_1.4/strongsgreek.xml'
 
 class StrongsHebrewParser(xml.sax.handler.ContentHandler):
-    """Class to parse the Strongs Hebrew xml files.
-
-    https://github.com/openscriptures/strongs"""
+    """Class to parse the Strongs Hebrew xml file."""
 
     def __init__(self, db=None):
         self.in_foreign = False
@@ -123,11 +121,110 @@ class StrongsHebrewParser(xml.sax.handler.ContentHandler):
             self.addRow()
             self.in_entry = False
 
+class StrongsGreekParser(xml.sax.handler.ContentHandler):
+    """Class to parse the Strongs Greek xml file."""
+
+    def __init__(self, db=None):
+        self.in_entry = False
+        self.in_strongs = False
+        self.in_deriv = False
+        self.in_defin = False
+        self.in_trans = False
+        self.db = db
+        self.reset_vars()
+
+    def reset_vars(self):
+        self.number = ""
+        self.lemma = ""
+        self.xlit = ""
+        self.pronounce = ""
+        self.deriv = ""
+        self.defin = ""
+        self.trans = ""
+        self.buffer = ""
+
+    def addRow(self):
+       print "%s|%s|%s|%s|%s|%s|%s" % (self.number, self.lemma, self.xlit,
+                              self.pronounce, self.deriv, self.defin, 
+                                       self.trans)
+       self.reset_vars()
+
+    def startElement(self, name, attrs):
+        """Actions for opening tags."""
+
+        if name == "entry":
+            self.in_entry = True
+            
+        if name == "strongs":
+            self.in_strongs = True
+
+        if name == "greek":
+            self.lemma = attrs.getValue("unicode")
+            self.xlit = attrs.getValue("translit")
+
+        if name == "pronunciation":
+            self.pronounce = attrs.getValue("strongs")
+
+        if name == "strongs_derivation":
+            self.in_deriv = True
+
+        if name == "strongs_def":
+            self.in_defin = True
+
+        if name == "kjv_def":
+            self.in_trans = True
+
+    def characters(self, data):
+        """Actions for characters within tags"""
+
+        if self.in_strongs:
+            self.number = "G%s" % data
+
+        if (self.in_deriv or self.in_defin or self.in_trans):
+            self.buffer += data
+
+    def endElement(self, name):
+        """Actions for closing tags."""
+
+        if name == "entry":
+            self.in_entry = False
+            self.addRow()
+
+        if name == "strongs":
+            self.in_strongs = False
+
+        if name == "strongs_derivation":
+            self.in_deriv = False
+            self.deriv = self.buffer.strip()
+            self.buffer = ""
+
+        if name == "strongs_def":
+            self.in_defin = False
+            self.defin = self.buffer.strip()
+            self.buffer = ""
+
+        if name == "kjv_def":
+            self.in_trans = False
+            self.trans = self.buffer.strip()
+            self.buffer = ""
+
+
 if __name__ == "__main__":
-    hebrew_parser = xml.sax.make_parser()
-    hebrew_parser.setContentHandler(StrongsHebrewParser())
-    h = open(hebrew_xml_file)
-    hebrew_parser.parse(h)
+    # Initialize the db here
+
+    # Parse the Hebrew here
+#    hebrew_parser = xml.sax.make_parser()
+ #   hebrew_parser.setContentHandler(StrongsHebrewParser())
+  #  h = open(hebrew_xml_file)
+   # hebrew_parser.parse(h)
+    #h.close()
+
+    # Parse the Greek here
+    greek_parser = xml.sax.make_parser()
+    greek_parser.setContentHandler(StrongsGreekParser())
+    g = open(greek_xml_file)
+    greek_parser.parse(g)
+    g.close()
 
 # TODO
 # - Add sqlite3 integration
