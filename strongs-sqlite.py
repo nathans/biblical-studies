@@ -40,8 +40,7 @@ class StrongsDB():
         self._conn = sqlite3.connect(db_file)
         self._cursor = self._conn.cursor()
         init_db_sql = "create table strongs (number text, lemma text, \
-            xlit text, pronounce text, deriv text, defin text, trans text, \
-            description text)"
+            xlit text, pronounce text, description text)"
         self._cursor.execute(init_db_sql)
         self._conn.commit()
 
@@ -55,39 +54,34 @@ class StrongsDB():
         self.lemma = ""
         self.xlit = ""
         self.pronounce = ""
-        self.deriv = ""
-        self.defin = ""
-        self.trans = ""
-        # For parts of the explanation not in the other tags, c.f. G1
         self.description = ""
     
     def add_row(self):
         """Add a full row into the database, used for Hebrew."""
-        add_row_sql = 'insert into strongs (number, lemma, xlit, pronounce, \
-            deriv, defin, trans) values (?, ?, ?, ?, ?, ?, ?)' 
-        logging.debug("add_row_sql: %s|%s|%s|%s|%s|%s|%s" % (self.number, 
-            self.lemma, self.xlit, self.pronounce, self.deriv, 
-            self.defin, self.trans))
+        add_row_sql = 'insert into strongs values (?, ?, ?, ?, ?)' 
+        logging.debug("add_row_sql: %s|%s|%s|%s|%s" % (self.number, 
+            self.lemma, self.xlit, self.pronounce, self.description))
         self._cursor.execute(add_row_sql, (self.number, self.lemma, self.xlit, 
-            self.pronounce, self.deriv, self.defin, self.trans,))
+            self.pronounce, self.description,))
         self.reset_vars()
 
     def add_row_greek(self):
         """Add a partial line, lacking derivation, for Greek."""
-        arg_sql = "insert into strongs (number, lemma, xlit, pronounce, defin,\
-            trans, description) values (?, ?, ?, ?, ?, ?, ?)"
-        logging.debug("add_row_sql: %s|%s|%s|%s|%s|%s|%s" % (self.number, 
-            self.lemma, self.xlit, self.pronounce, self.defin, self.trans,
-            self.description))
+        arg_sql = "insert into strongs (number, lemma, xlit, pronounce) values\
+            (?, ?, ?, ?)"
+        logging.debug("add_row_sql: %s|%s|%s|%s" % (self.number, 
+            self.lemma, self.xlit, self.pronounce))
         self._cursor.execute(arg_sql, (self.number, self.lemma, self.xlit, 
-            self.pronounce, self.defin, self.trans, self.description,))
+            self.pronounce,))
         self.reset_vars()
 
     def add_deriv(self):
         """Fill in the missing deriv field for Greek."""
-        ad_sql = "update strongs set deriv = ? where number = ?"
-        logging.debug("updating %s with deviv: %s" % (self.number, self.deriv))
-        self._cursor.execute(ad_sql, (self.deriv, self.number,))
+        self.prepare_row()
+        ad_sql = "update strongs set description = ? where number = ?"
+        logging.debug("updating %s with description: %s" % (self.number,
+                                                      self.description))
+        self._cursor.execute(ad_sql, (self.description, self.number,))
         self.reset_vars()
 
     def get_lemma(self, number):
@@ -105,6 +99,9 @@ class StrongsDB():
             lemma = res[0]
         return lemma
 
+    def prepare_row(self):
+        self.description = self.description.replace("\n","")
+
     def db_commit(self):
         """Commit changes to the database."""
         self._conn.commit()
@@ -121,10 +118,7 @@ class StrongsHebrewParser(xml.sax.handler.ContentHandler):
         self.in_foreign = False
         self.note_depth = 0
         self.in_entry = False
-        self.in_deriv = False
-        self.in_defin = False
         self.in_trans = False
-        self.buffer = ""
         self.db = db
 
     def startElement(self, name, attrs):
@@ -133,11 +127,7 @@ class StrongsHebrewParser(xml.sax.handler.ContentHandler):
             self.in_foreign = True
         if name == "note":
             self.note_depth +=1
-            if attrs.getValue("type") == "exegesis":
-                self.in_deriv = True
-            elif attrs.getValue("type") == "explanation":
-                self.in_defin = True
-            elif attrs.getValue("type") == "translation":
+            if attrs.getValue("type") == "translation":
                 self.in_trans = True
         if name == "div" and attrs.getValue("type") == "entry":
             self.in_entry = True
@@ -148,14 +138,14 @@ class StrongsHebrewParser(xml.sax.handler.ContentHandler):
             self.db.pronounce = attrs.getValue("POS")
         if name == "w" and self.note_depth > 0:
             if "lemma" in attrs.getNames():
-                self.buffer += attrs.getValue("lemma")
+                self.db.description += attrs.getValue("lemma")
             else:
-                self.buffer += attrs.getValue("POS")
+                self.db.description += attrs.getValue("POS")
 
     def characters(self, data):
         """Actions for characters within tags"""
         if self.note_depth > 0:
-            self.buffer += data
+            self.db.description += data
 
     def endElement(self, name):
         """Actions for closing tags."""
@@ -164,23 +154,18 @@ class StrongsHebrewParser(xml.sax.handler.ContentHandler):
         if name == "note":
             self.note_depth -=1
             # If we exit a note completely, close the note types
-            if self.note_depth == 0:
-                if self.in_deriv:
-                    self.db.deriv = self.buffer
-                elif self.in_defin:
-                    self.db.defin = self.buffer
-                elif self.in_trans:
-                    self.db.trans = self.buffer
-                # All note types can be closed, and buffer reset
-                self.buffer = ""
-                self.in_deriv = False
-                self.in_defin = False
-                self.in_trans = False
+            if self.note_depth == 0 and not self.in_trans:
+                # Add a space between entries when moving between notes
+                if self.db.description and self.db.description[-1] == ";":
+                    self.db.description += " "
+                else:
+                    self.db.description += "; "
         if name == "div" and self.in_entry == True:
             # Commit to db when each word's div tag is closed
             # Have to differentiate the type, since there is a div supertag.
             self.db.add_row()
             self.in_entry = False
+            self.in_trans = False
 
 
 class StrongsGreekParser(xml.sax.handler.ContentHandler):
@@ -189,8 +174,6 @@ class StrongsGreekParser(xml.sax.handler.ContentHandler):
     def __init__(self, db):
         self.in_entry = False
         self.in_strongs = False
-        self.in_defin = False
-        self.in_trans = False
         self.greek_tag = 0
         self.db = db
     def startElement(self, name, attrs):
@@ -208,22 +191,11 @@ class StrongsGreekParser(xml.sax.handler.ContentHandler):
                 self.db.xlit = attrs.getValue("translit")
         if name == "pronunciation":
             self.db.pronounce = attrs.getValue("strongs")
-        if name == "strongs_def":
-            self.in_defin = True
-        if name == "kjv_def":
-            self.in_trans = True
 
     def characters(self, data):
         """Actions for characters within tags"""
-        if self.in_entry:
-            if self.in_strongs:
-                self.db.number = "G%s" % data
-            elif self.in_defin:
-                self.db.defin += data
-            elif self.in_trans:
-                self.db.trans += data
-            else:
-                self.db.description += data
+        if self.in_strongs:
+            self.db.number = "G%s" % data
         
     def endElement(self, name):
         """Actions for closing tags."""
@@ -233,24 +205,20 @@ class StrongsGreekParser(xml.sax.handler.ContentHandler):
             self.db.add_row_greek()
         if name == "strongs":
             self.in_strongs = False
-        if name == "strongs_def":
-            self.in_defin = False
-        if name == "kjv_def":
-            self.in_trans = False
 
 
 class StrongsG2Parser(xml.sax.handler.ContentHandler):
     """Class to fill in strongs_derivation in Greek from db."""
 
     def __init__(self, db):
-        self.in_deriv = False
+        self.in_desc = False
         self.in_strongs = False
         self.db = db
 
     def startElement(self, name, attrs):
         """Actions for opening tags."""
         if name == "strongs_derivation":
-            self.in_deriv = True
+            self.in_desc = True
         if name == "strongs":
             self.in_strongs = True
         if name == "strongsref":
@@ -260,12 +228,12 @@ class StrongsG2Parser(xml.sax.handler.ContentHandler):
             logging.debug("Querying strongsref %s for entry %s" % (number, 
                 self.db.number))
             lemma = self.db.get_lemma(number)
-            self.db.deriv += lemma
+            self.db.description += lemma
 
     def characters(self, data):
         """Actions for characters within tags"""
-        if self.in_deriv:
-            self.db.deriv += data
+        if self.in_desc:
+            self.db.description += data
         if self.in_strongs:
             self.db.number = "G%s" % data
 
@@ -273,8 +241,8 @@ class StrongsG2Parser(xml.sax.handler.ContentHandler):
         """Actions for closing tags."""
         if name == "entry":
             self.db.add_deriv()
-        if name == "strongs_derivation":
-            self.in_deriv = False
+        if name == "entry":
+            self.in_desc = False
         if name == "strongs":
             self.in_strongs = False
 

@@ -12,13 +12,8 @@ Requirements:
 - Python v2.6 or later
 
 Notes:
-- Various fields may contain leading or trailing whitespace and carriage
-  returns.
 - Some strongsref tags in the Greek XML make reference to Strongs numbers which
   are not included in the XML file. In those cases the strongs number is listed
   in place of the unicode for the reference lemma (e.g. "G5689").
 - Hebrew when viewed in the console will appear LTR, but in text files and
   other uses should appear RTL.
-- Some Greek entries have info outside of the three "note" types (e.g.
-  derivation, definition, translation). These have been put in the "description"
-  field.
