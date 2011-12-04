@@ -40,7 +40,8 @@ class StrongsDB():
         self._conn = sqlite3.connect(db_file)
         self._cursor = self._conn.cursor()
         init_db_sql = "create table strongs (number text, lemma text, \
-            xlit text, pronounce text, deriv text, defin text, trans text)"
+            xlit text, pronounce text, deriv text, defin text, trans text, \
+            description text)"
         self._cursor.execute(init_db_sql)
         self._conn.commit()
 
@@ -57,10 +58,13 @@ class StrongsDB():
         self.deriv = ""
         self.defin = ""
         self.trans = ""
+        # For parts of the explanation not in the other tags, c.f. G1
+        self.description = ""
     
     def add_row(self):
         """Add a full row into the database, used for Hebrew."""
-        add_row_sql = 'insert into strongs values (?, ?, ?, ?, ?, ?, ?)' 
+        add_row_sql = 'insert into strongs (number, lemma, xlit, pronounce, \
+            deriv, defin, trans) values (?, ?, ?, ?, ?, ?, ?)' 
         logging.debug("add_row_sql: %s|%s|%s|%s|%s|%s|%s" % (self.number, 
             self.lemma, self.xlit, self.pronounce, self.deriv, 
             self.defin, self.trans))
@@ -71,11 +75,12 @@ class StrongsDB():
     def add_row_greek(self):
         """Add a partial line, lacking derivation, for Greek."""
         arg_sql = "insert into strongs (number, lemma, xlit, pronounce, defin,\
-            trans) values (?, ?, ?, ?, ?, ?)"
-        logging.debug("add_row_sql: %s|%s|%s|%s|%s|%s" % (self.number, 
-            self.lemma, self.xlit, self.pronounce, self.defin, self.trans))
+            trans, description) values (?, ?, ?, ?, ?, ?, ?)"
+        logging.debug("add_row_sql: %s|%s|%s|%s|%s|%s|%s" % (self.number, 
+            self.lemma, self.xlit, self.pronounce, self.defin, self.trans,
+            self.description))
         self._cursor.execute(arg_sql, (self.number, self.lemma, self.xlit, 
-            self.pronounce, self.defin, self.trans,))
+            self.pronounce, self.defin, self.trans, self.description,))
         self.reset_vars()
 
     def add_deriv(self):
@@ -186,6 +191,7 @@ class StrongsGreekParser(xml.sax.handler.ContentHandler):
         self.in_strongs = False
         self.in_defin = False
         self.in_trans = False
+        self.greek_tag = 0
         self.db = db
     def startElement(self, name, attrs):
         """Actions for opening tags."""
@@ -194,8 +200,12 @@ class StrongsGreekParser(xml.sax.handler.ContentHandler):
         if name == "strongs":
             self.in_strongs = True
         if name == "greek":
-            self.db.lemma = attrs.getValue("unicode")
-            self.db.xlit = attrs.getValue("translit")
+            # Ignore <greek> tags after the first one.
+            # Corrects a bug in G1
+            self.greek_tag += 1
+            if self.greek_tag == 1:
+                self.db.lemma = attrs.getValue("unicode")
+                self.db.xlit = attrs.getValue("translit")
         if name == "pronunciation":
             self.db.pronounce = attrs.getValue("strongs")
         if name == "strongs_def":
@@ -205,17 +215,21 @@ class StrongsGreekParser(xml.sax.handler.ContentHandler):
 
     def characters(self, data):
         """Actions for characters within tags"""
-        if self.in_strongs:
-            self.db.number = "G%s" % data
-        if self.in_defin:
-            self.db.defin += data
-        if self.in_trans:
-            self.db.trans += data
-
+        if self.in_entry:
+            if self.in_strongs:
+                self.db.number = "G%s" % data
+            elif self.in_defin:
+                self.db.defin += data
+            elif self.in_trans:
+                self.db.trans += data
+            else:
+                self.db.description += data
+        
     def endElement(self, name):
         """Actions for closing tags."""
         if name == "entry":
             self.in_entry = False
+            self.greek_tag = 0
             self.db.add_row_greek()
         if name == "strongs":
             self.in_strongs = False
