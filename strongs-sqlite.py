@@ -25,21 +25,31 @@ import logging
 import sqlite3
 import xml.sax
 
-hebrew_xml_file = '../strongs/hebrew/StrongHebrewG.xml'
-greek_xml_file = '../strongs/greek/StrongsGreekDictionaryXML_1.4/strongsgreek.xml'
+hebrew_xml = '../strongs/hebrew/StrongHebrewG.xml'
+greek_xml = '../strongs/greek/StrongsGreekDictionaryXML_1.4/strongsgreek.xml'
+db_file = 'strongs.sqlite'
+log_file = 'strongs.log'
 
 class StrongsDB():
     """Class to handle database access for Strongs import"""
 
     def __init__(self, db_file):
+        """Initialize the database and instance vars."""
+
         self.reset_vars()
         self._conn = sqlite3.connect(db_file)
         self._cursor = self._conn.cursor()
-        init_db_sql = "create table strongs (number text, lemma text, xlit text, pronounce text, deriv text, defin text, trans text)"
+        init_db_sql = "create table strongs (number text, lemma text, \
+            xlit text, pronounce text, deriv text, defin text, trans text)"
         self._cursor.execute(init_db_sql)
         self._conn.commit()
 
     def reset_vars(self):
+        """Reset instance variables between db operations.
+
+        Should be called after batches of add_row, add_row_greek, and
+        add_deriv."""
+
         self.number = ""
         self.lemma = ""
         self.xlit = ""
@@ -50,22 +60,37 @@ class StrongsDB():
     
     def add_row(self):
         add_row_sql = 'insert into strongs values (?, ?, ?, ?, ?, ?, ?)' 
-        logging.debug("add_row_sql: %s|%s|%s|%s|%s|%s|%s" % (self.number, self.lemma, self.xlit, self.pronounce, self.deriv.strip(), self.defin.strip(), self.trans.strip()))
-        self._cursor.execute(add_row_sql, (self.number, self.lemma, self.xlit, self.pronounce, self.deriv.strip(), self.defin.strip(), self.trans.strip(),))
+        logging.debug("add_row_sql: %s|%s|%s|%s|%s|%s|%s" % (self.number, 
+            self.lemma, self.xlit, self.pronounce, self.deriv, 
+            self.defin, self.trans))
+        self._cursor.execute(add_row_sql, (self.number, self.lemma, self.xlit, 
+            self.pronounce, self.deriv, self.defin, self.trans,))
         self.reset_vars()
 
     def add_row_greek(self):
-        arg_sql = "insert into strongs (number, lemma, xlit, pronounce, defin, trans) values (?, ?, ?, ?, ?, ?)"
-        logging.debug("add_row_sql: %s|%s|%s|%s|%s|%s" % (self.number, self.lemma, self.xlit, self.pronounce, self.defin.replace('\n',' ').strip(), self.trans.strip()))
-        #logging.debug("arg_sql: %s" % arg_sql)
-        self._cursor.execute(arg_sql, (self.number, self.lemma, self.xlit, self.pronounce, self.defin.replace('\n',' ').strip(), self.trans.strip(),))
+        arg_sql = "insert into strongs (number, lemma, xlit, pronounce, defin,\
+            trans) values (?, ?, ?, ?, ?, ?)"
+        logging.debug("add_row_sql: %s|%s|%s|%s|%s|%s" % (self.number, 
+            self.lemma, self.xlit, self.pronounce, self.defin, self.trans))
+        self._cursor.execute(arg_sql, (self.number, self.lemma, self.xlit, 
+            self.pronounce, self.defin, self.trans,))
         self.reset_vars()
 
     def add_deriv(self):
+        ad_sql = "update strongs set deriv = ? where number = ?"
+        logging.debug("updating %s with deviv: %s" % (self.number, self.deriv))
+        self._cursor.execute(ad_sql, (self.deriv, self.number,))
         self.reset_vars()
 
     def get_lemma(self, number):
-        pass
+        gl_sql = "select lemma from strongs where number=?"
+        self._cursor.execute(gl_sql, (number,))
+        res = self._cursor.fetchone()
+        if not res:
+            lemma = number
+        else:
+            lemma = res[0]
+        return lemma
 
     def db_commit(self):
         self._conn.commit()
@@ -226,11 +251,26 @@ class StrongsG2Parser(xml.sax.handler.ContentHandler):
         if name == "strongs_derivation":
             self.in_deriv = True
 
+        if name == "strongs":
+            self.in_strongs = True
+
+        if name == "strongsref":
+            lang = attrs.getValue("language")
+            num = attrs.getValue("strongs").lstrip("0")
+            number = "%s%s" % (lang[0], num)
+            logging.debug("Querying strongsref %s for entry %s" % (number, 
+                self.db.number))
+            lemma = self.db.get_lemma(number)
+            self.db.deriv += lemma
+
     def characters(self, data):
         """Actions for characters within tags"""
 
         if self.in_deriv:
             self.db.deriv += data
+
+        if self.in_strongs:
+            self.db.number = "G%s" % data
 
     def endElement(self, name):
         """Actions for closing tags."""
@@ -241,20 +281,22 @@ class StrongsG2Parser(xml.sax.handler.ContentHandler):
         if name == "strongs_derivation":
             self.in_deriv = False
 
+        if name == "strongs":
+            self.in_strongs = False
+
 
 if __name__ == "__main__":
     # Configure log level here
-    logging.basicConfig(filename="strongs.log",
-                        format='%(asctime)s %(message)s', level=logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG, filename=log_file)
 
     # Initialize the db here
-    db = StrongsDB('strongs.sqlite')
+    db = StrongsDB(db_file)
 
     # Parse the Hebrew here
     logging.info("Parsing Hebrew XML")
     hebrew_parser = xml.sax.make_parser()
     hebrew_parser.setContentHandler(StrongsHebrewParser(db))
-    h = open(hebrew_xml_file)
+    h = open(hebrew_xml)
     hebrew_parser.parse(h)
     h.close()
     db.db_commit()
@@ -263,17 +305,20 @@ if __name__ == "__main__":
     logging.info("Parsing Greek XML")
     greek_parser = xml.sax.make_parser()
     greek_parser.setContentHandler(StrongsGreekParser(db))
-    g = open(greek_xml_file)
+    g = open(greek_xml)
     greek_parser.parse(g)
-    db.db_commit()
-
-    # Second pass on the Greek to retrieve missing lemmas in strongs_derivation
-    logging.info("Finish Greek Strongs derivations")
-    g2_parser = xml.sax.make_parser()
-    g2_parser.setContentHandler(StrongsG2Parser(db))
-    g2_parser.parse(g)
     g.close()
     db.db_commit()
 
-# TODO
-# - Add sqlite3 integration
+    # Second pass on the Greek to retrieve missing lemmas in strongs_derivation
+    logging.info("Finish Greek Strongs derivations",
+                 filename="strongs.log")
+    g2_parser = xml.sax.make_parser()
+    g2_parser.setContentHandler(StrongsG2Parser(db))
+    g2 = open(greek_xml)
+    g2_parser.parse(g2)
+    g2.close()
+    db.db_commit()
+
+    # All Done
+    logging.info("Finished. sqlite database at %s is ready." % db_file)
