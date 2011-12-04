@@ -33,14 +33,14 @@ class StrongsDB():
 
     def __init__(self, db_file):
         self.reset_vars()
-        self.conn = sqlite3.connect(db_file)
-        self.cursor = self.conn.cursor()
-        init_db_sql = """create table strongs (number text, lemma text, xlit text, 
-            pronounce text, deriv text, defin text, trans text)"""
-        self.cursor.execute(init_db_sql)
-        self.conn.commit()
+        self._conn = sqlite3.connect(db_file)
+        self._cursor = self._conn.cursor()
+        init_db_sql = "create table strongs (number text, lemma text, xlit text, pronounce text, deriv text, defin text, trans text)"
+        self._cursor.execute(init_db_sql)
+        self._conn.commit()
 
     def reset_vars(self):
+        self.number = ""
         self.lemma = ""
         self.xlit = ""
         self.pronounce = ""
@@ -49,21 +49,29 @@ class StrongsDB():
         self.trans = ""
     
     def add_row(self):
-        add_row_sql = "insert into strongs values ('%s', '%s', '%s', '%s', '%s', '%s', '%s')" % (self.number, self.lemma, self.xlit, self.pronounce, self.deriv.strip(), self.defin.strip(), self.trans.strip())
-        logging.debug("Add row sql: %s" % add_row_sql)
-        self.conn.commit()
+        add_row_sql = 'insert into strongs values (?, ?, ?, ?, ?, ?, ?)' 
+        logging.debug("add_row_sql: %s|%s|%s|%s|%s|%s|%s" % (self.number, self.lemma, self.xlit, self.pronounce, self.deriv.strip(), self.defin.strip(), self.trans.strip()))
+        self._cursor.execute(add_row_sql, (self.number, self.lemma, self.xlit, self.pronounce, self.deriv.strip(), self.defin.strip(), self.trans.strip(),))
         self.reset_vars()
 
     def add_row_greek(self):
-        print "%s|%s|%s|%s|%s|%s" % (self.number, self.lemma, self.xlit,
-                              self.pronounce, self.defin.strip(), self.trans.strip(":-."))
+        arg_sql = "insert into strongs (number, lemma, xlit, pronounce, defin, trans) values (?, ?, ?, ?, ?, ?)"
+        logging.debug("add_row_sql: %s|%s|%s|%s|%s|%s" % (self.number, self.lemma, self.xlit, self.pronounce, self.defin.replace('\n',' ').strip(), self.trans.strip()))
+        #logging.debug("arg_sql: %s" % arg_sql)
+        self._cursor.execute(arg_sql, (self.number, self.lemma, self.xlit, self.pronounce, self.defin.replace('\n',' ').strip(), self.trans.strip(),))
         self.reset_vars()
 
     def add_deriv(self):
         self.reset_vars()
 
+    def get_lemma(self, number):
+        pass
+
+    def db_commit(self):
+        self._conn.commit()
+
     def finish(self):
-        self.cursor.close()
+        self._cursor.close()
 
 
 class StrongsHebrewParser(xml.sax.handler.ContentHandler):
@@ -236,10 +244,11 @@ class StrongsG2Parser(xml.sax.handler.ContentHandler):
 
 if __name__ == "__main__":
     # Configure log level here
-    logging.basicConfig(filename="strongs.log", format='%(asctime)s %(message)s', level=logging.DEBUG)
+    logging.basicConfig(filename="strongs.log",
+                        format='%(asctime)s %(message)s', level=logging.DEBUG)
 
     # Initialize the db here
-    db = StrongsDB('strongs.db')
+    db = StrongsDB('strongs.sqlite')
 
     # Parse the Hebrew here
     logging.info("Parsing Hebrew XML")
@@ -248,6 +257,7 @@ if __name__ == "__main__":
     h = open(hebrew_xml_file)
     hebrew_parser.parse(h)
     h.close()
+    db.db_commit()
 
     # Parse the Greek here
     logging.info("Parsing Greek XML")
@@ -255,6 +265,7 @@ if __name__ == "__main__":
     greek_parser.setContentHandler(StrongsGreekParser(db))
     g = open(greek_xml_file)
     greek_parser.parse(g)
+    db.db_commit()
 
     # Second pass on the Greek to retrieve missing lemmas in strongs_derivation
     logging.info("Finish Greek Strongs derivations")
@@ -262,5 +273,7 @@ if __name__ == "__main__":
     g2_parser.setContentHandler(StrongsG2Parser(db))
     g2_parser.parse(g)
     g.close()
+    db.db_commit()
+
 # TODO
 # - Add sqlite3 integration
