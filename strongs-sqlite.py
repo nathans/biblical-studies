@@ -22,12 +22,17 @@
 # THE SOFTWARE.
 
 import logging
+import os
 import sqlite3
+import StringIO
 import xml.sax
+import zipfile
+import urllib
 
-hebrew_xml = '../strongs/hebrew/StrongHebrewG.xml'
-greek_xml = '../strongs/greek/StrongsGreekDictionaryXML_1.4/strongsgreek.xml'
-db_file = 'strongs.sqlite'
+
+hebrew_xml = 'https://github.com/openscriptures/strongs/raw/master/hebrew/StrongHebrewG.xml'
+greek_zip = 'http://files.morphgnt.org/strongs-dictionary/StrongsGreekDictionaryXML_1.5.zip'
+dbb_file = 'strongs.sqlite'
 log_file = 'strongs.log'
 
 
@@ -176,6 +181,7 @@ class StrongsGreekParser(xml.sax.handler.ContentHandler):
         self.in_strongs = False
         self.greek_tag = 0
         self.db = db
+
     def startElement(self, name, attrs):
         """Actions for opening tags."""
         if name == "entry":
