@@ -30,10 +30,23 @@ import zipfile
 import urllib
 
 
-hebrew_xml = 'https://github.com/openscriptures/strongs/raw/master/hebrew/StrongHebrewG.xml'
-greek_zip = 'http://files.morphgnt.org/strongs-dictionary/StrongsGreekDictionaryXML_1.5.zip'
-dbb_file = 'strongs.sqlite'
+hebrew_source = 'https://github.com/openscriptures/strongs/raw/master/hebrew/StrongHebrewG.xml'
+greek_source = 'http://files.morphgnt.org/strongs-dictionary/StrongsGreekDictionaryXML_1.5.zip'
+db_file = 'strongs.sqlite'
 log_file = 'strongs.log'
+
+def download(url):
+    """Download the given URL and return a path."""
+    if not os.path.exists(os.path.basename(url)):
+        logging.info("Retrieving %s" % url)
+        try:
+            urllib.urlretrieve(url, os.path.basename(url))
+        except:
+            logging.error("Failed to retrieve resource.")
+            sys.exit(1)
+    else:
+        logging.info("%s already exists" % os.path.basename(url))
+    return os.path.basename(url)
 
 
 class StrongsDB():
@@ -259,6 +272,7 @@ if __name__ == "__main__":
     # Initialize the db here
     db = StrongsDB(db_file)
     # Parse the Hebrew here
+    hebrew_xml = download(hebrew_source)
     logging.info("Parsing Hebrew XML")
     hebrew_parser = xml.sax.make_parser()
     hebrew_parser.setContentHandler(StrongsHebrewParser(db))
@@ -267,20 +281,18 @@ if __name__ == "__main__":
     h.close()
     db.db_commit()
     # Parse the Greek here
+    greek_zip = download(greek_source)
     logging.info("Parsing Greek XML")
     greek_parser = xml.sax.make_parser()
     greek_parser.setContentHandler(StrongsGreekParser(db))
-    g = open(greek_xml)
-    greek_parser.parse(g)
-    g.close()
+    _zip = zipfile.ZipFile(greek_zip)
+    greek_parser.parse(StringIO.StringIO(_zip.read("strongsgreek.xml")))
     db.db_commit()
     # Second pass on the Greek to retrieve missing lemmas in strongs_derivation
     logging.info("Finish Greek Strongs derivations")
     g2_parser = xml.sax.make_parser()
     g2_parser.setContentHandler(StrongsG2Parser(db))
-    g2 = open(greek_xml)
-    g2_parser.parse(g2)
-    g2.close()
+    g2_parser.parse(StringIO.StringIO(_zip.read("strongsgreek.xml")))
     db.db_commit()
     # All Done
     logging.info("Finished. sqlite database at %s is ready." % db_file)
