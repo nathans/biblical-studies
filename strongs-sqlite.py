@@ -1,7 +1,7 @@
 #! /usr/bin/env python
 #
 # Strongs XML to sqlite3 converter
-# Copyright (c) 2011 Nathan Smith <nathan@smithfam.info>
+# Copyright (c) 2011, 2012 Nathan Smith <nathan@smithfam.info>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ import urllib
 
 
 hebrew_source = 'https://github.com/openscriptures/strongs/raw/master/hebrew/StrongHebrewG.xml'
-greek_source = 'http://files.morphgnt.org/strongs-dictionary/StrongsGreekDictionaryXML_1.5.zip'
+greek_source = 'https://github.com/downloads/morphgnt/strongs-dictionary-xml/StrongsGreekDictionaryXML_1.5.zip'
 db_file = 'strongs.sqlite'
 log_file = 'strongs.log'
 
