@@ -3,7 +3,6 @@
 # Script to extract and rank all of Jesus words
 # (c) 2012 Nathan Smith <nathan@smithfam.info>
 
-import logging
 import os
 import StringIO
 import urllib
@@ -12,15 +11,9 @@ import zipfile
 
 import nltk
 from nltk.corpus import stopwords
+
 stops = stopwords.words('english')
-
 url = 'http://ebible.org/web/eng-web_usfx.zip'
-
-def nonstopword(word):
-    if word in stops:
-        return False
-    else:
-        return True
 
 class WEBParser(xml.sax.handler.ContentHandler):
     """Class to parse WEB XML and extract words of Jesus"""
@@ -55,7 +48,7 @@ if __name__ == '__main__':
     _zip = zipfile.ZipFile(web_zip)
     parser.parse(StringIO.StringIO(_zip.read("eng-web_usfx.xml")))
     words_of_jesus = nltk.word_tokenize(web.words)
-    word_list = [w for w in words_of_jesus if (nonstopword(w) and w.isalpha())]
+    word_list = [w for w in words_of_jesus if (w not in stops and w.isalpha())]
     fdist = nltk.FreqDist(word_list)
-    for word in fdist.keys()[:100]:
-        print word
+    for word, count in fdist.items()[:100]:
+        print "%s - %d" % (word, count)
