@@ -97,6 +97,8 @@ def process_book(book,archive):
     "Return the normalized text of the given book."
 
     print "Processing " + book + "."
+    tc_markers = [u'\u2E00',u'\u2E01',u'\u2E02',u'\u2E03',u'\u2E04',
+                  u'\u2E05',u'\u27E6',u'\u27E7']
     filename = FILENAMES[book]
     pattern = re.compile('^.*\t')
     normalized = ""
@@ -107,6 +109,9 @@ def process_book(book,archive):
         text = text.strip()
         # Normalize unicode
         text = unicodedata.normalize("NFC", unicode(text, 'utf-8'))
+        # Remove text-critical markers
+        for marker in tc_markers:
+            text = text.replace(marker,'')
         # Add back line break for proper tokenization later.
         normalized += text + "\n"
     f = open('out/' + book + '.txt','w')

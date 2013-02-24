@@ -15,8 +15,9 @@ To run the script:
 This will download and extract the archive, normalizing the text for an NLTK
 corpus. Namely, this script 1) removes the leading verse number and tab
 character from each verse, 2) removes trailing whitespace, 3) normalizes the
-unicode characters, 4) adds back a newline in between verses, and 5) places 
-the results in a text file. The resultant files will be placed in a new folder named 'out/' in the working directory.
+unicode characters, 4) removes text-critical signs, 5) adds back a newline in 
+between verses, and 6) places the results in a text file. The resultant files 
+will be placed in a new folder named 'out/' in the working directory.
 
 Use with NLTK:
 Then you can use these files to load them into an NLTK plain text corpus.
