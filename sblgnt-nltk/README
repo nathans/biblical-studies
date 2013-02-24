@@ -1,0 +1,46 @@
+sblgnt-nltk.py downloads the plain text archive of the SBLGNT [0] and
+normalizes it for use as Natural Language Tool Kit [1] corpus.
+
+Requirements:
+sblgnt-nltk.py requires NLTK 2.0 or higher (with its attendant requirements).
+To quickly install the requirements with pip:
+
+    $ pip install -r requirements.txt
+
+Use:
+To run the script:
+
+    $ python sblgnt-nltk.org
+
+This will download and extract the archive, normalizing the text for an NLTK
+corpus. Namely, this script 1) removes the leading verse number and tab
+character from each verse, 2) removes trailing whitespace, 3) normalizes the
+unicode characters, 4) adds back a newline in between verses, and 5) places 
+the results in a text file. The resultant files will be placed in a new folder named 'out/' in the working directory.
+
+Use with NLTK:
+Then you can use these files to load them into an NLTK plain text corpus.
+For example, the following Python shell commands:
+
+    >>> import nltk
+    >>> sblgnt = nltk.corpus.PlaintextCorpusReader('out','.*',encoding='utf-8')
+    >>> sblgnt_text = nltk.text.Text([w.encode('utf-8') for w in sblgnt.words()
+
+sblgnt will be an NLTK corpus object, and sblgnt_text will be an NLTK text
+object. Refer to the NLTK documentation for uses of these classes.
+
+[0] http://sblgnt.com/
+[1] http://nltk.org/
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
