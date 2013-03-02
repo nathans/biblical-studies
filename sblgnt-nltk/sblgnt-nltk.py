@@ -1,4 +1,4 @@
-# sblgnt.py
+# sblgnt-nltk.py
 # Imports the SBLGNT from plain text and loads it into an NLTK corpus
 # (c) 2013 Nathan Smith <nathan@smithfam.info>
 #
