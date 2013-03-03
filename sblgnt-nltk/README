@@ -1,8 +1,12 @@
 sblgnt-nltk.py downloads the plain text archive of the SBLGNT [0] and
 normalizes it for use as Natural Language Tool Kit [1] corpus.
 
+load-sblgnt.py takes the resulting output from above and loads it into an NLTK
+Text object, and runs the collocations() and generate() functions as an 
+example.
+
 Requirements:
-sblgnt-nltk.py requires NLTK 2.0 or higher (with its attendant requirements).
+These scripts require NLTK 2.0 or higher (with its attendant requirements).
 To quickly install the requirements with pip:
 
     $ pip install -r requirements.txt
