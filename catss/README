@@ -1,0 +1,17 @@
+lxxm-convert.py downloads a copy of the CATSS LXXM text and converts it to
+unicode.
+
+This script requires >= Python 2.6. It relies on argparse, which was included
+with 2.7, so if you are using 2.6, you'll need to install it:
+
+  $ pip install -r requirements.txt
+
+Example usage:
+
+  $ python lxxm-convert.py all
+
+This completes all stages of the script. Output will be found in 'out/' and the
+original source files will be found in 'source/'.
+
+Individual stages (download, patch, convert, rename) can be invoked as well.
+Run the script with the --help parameter for details.
