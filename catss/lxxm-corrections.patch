@@ -1,0 +1,264 @@
+diff --git a/source/11.Ruth.mlxx b/source/11.Ruth.mlxx
+index 445e333..dfedcec 100644
+--- a/source/11.Ruth.mlxx
++++ b/source/11.Ruth.mlxx
+@@ -462,7 +462,7 @@ TOU=                     RA  GSN    O(
+ POREU/ESQAI              V1  PMN    POREU/OMAI
+ MET'                     P          META/
+ AU)TH=S                  RD  GSF    AU)TO/S
+-E)KO/PASEN               VAI AAI3S  KOPAZ/W
++E)KO/PASEN               VAI AAI3S  KOPA/ZW
+ TOU=                     RA  GSN    O(
+ LALH=SAI                 VA  AAN    LALE/W
+ PRO\S                    P          PRO/S
+diff --git a/source/12.1Sam.mlxx b/source/12.1Sam.mlxx
+index cd3d91b..2dfe87c 100644
+--- a/source/12.1Sam.mlxx
++++ b/source/12.1Sam.mlxx
+@@ -14315,7 +14315,7 @@ PAIDA/RION               N2N NSN    PAIDA/RION
+ OU)K                     D          OU)
+ E)/GNW                   VZI AAI3S  GIGNW/SKW
+ OU)QE/N                  A3  ASN    OU)DEI/S
+-PA/REC                   P          PAR/EC
++PA/REC                   P          PA/REC
+ *IWNAQAN                 N   NSM    *IWNAQAN
+ KAI\                     C          KAI/
+ *DAUID                   N   NSM    *DAUI/D
+@@ -14730,7 +14730,7 @@ O(/TI                    C          O(/TI
+ OU)K                     D          OU)
+ E)/STIN                  V9  PAI3S  EI)MI/
+ E(TE/RA                  A1A APN    E(/TEROS
+-PA/REC                   P          PAR/EC
++PA/REC                   P          PA/REC
+ TAU/THS                  RD  GSF    OU(=TOS
+ E)NTAU=QA                D          E)NTAU=QA
+ KAI\                     C          KAI/
+diff --git a/source/13.2Sam.mlxx b/source/13.2Sam.mlxx
+index 42b8a81..f74ccfb 100644
+--- a/source/13.2Sam.mlxx
++++ b/source/13.2Sam.mlxx
+@@ -277,7 +277,7 @@ W(=DE                    D          W(=DE
+ 2Sam/K 1:11
+ KAI\                     C          KAI/
+ E)KRA/THSEN              VAI AAI3S  KRATE/W
+-*DAUID                   N   NSM    *DAVID
++*DAUID                   N   NSM    *DAUID
+ TW=N                     RA  GPN    O(
+ I(MATI/WN                N2N GPN    I(MA/TION
+ AU)TOU=                  RD  GSM    AU)TO/S
+@@ -12873,7 +12873,7 @@ A)PH/GCATO               VAI AMI3S  A)/GXOMAI        A)PO
+ KAI\                     C          KAI/
+ A)PE/QANEN               VBI AAI3S  QNH/SKW          A)PO
+ KAI\                     C          KAI/
+-E)TA/FH                  VDI API3S  QAP/TW
++E)TA/FH                  VDI API3S  QA/PTW
+ E)N                      P          E)N
+ TW=|                     RA  DSM    O(
+ TA/FW|                   N2  DSM    TA/FOS
+@@ -13329,7 +13329,7 @@ GH=S                     N1  GSF    GH=
+ KAI\                     C          KAI/
+ O(                       RA  NSM    O(
+ H(MI/ONOS                N2  NSM    H(MI/ONOS
+-U(POKA/TW                D          U(POKAT/W
++U(POKA/TW                D          U(POKA/TW
+ AU)TOU=                  RD  GSM    AU)TO/S
+ PARH=LQEN                VBI AAI3S  E)/RXOMAI        PARA
+ 
+@@ -14635,7 +14635,7 @@ AU)TOU=                  RD  GSM    AU)TO/S
+ MET'                     P          META/
+ AU)TOU=                  RD  GSM    AU)TO/S
+ KAI\                     C          KAI/
+-KATEU/QUNAN              VA  AAI3P  EU)QUN/W         KATA
++KATEU/QUNAN              VA  AAI3P  EU)QU/NW         KATA
+ TO\N                     RA  ASM    O(
+ *IORDA/NHN               N1M ASM    *I)ORDA/NHS
+ E)/MPROSQEN              P          E)/MPROSQEN
+@@ -18154,7 +18154,7 @@ H)QE/LHSEN               VAI AAI3S  QE/LW
+ PIEI=N                   VB  AAN    PI/NW
+ AU)TO\                   RD  ASN    AU)TO/S
+ KAI\                     C          KAI/
+-E)/SPEISEN               VAI AAI3S  SPEN/DW
++E)/SPEISEN               VAI AAI3S  SPE/NDW
+ AU)TO\                   RD  ASN    AU)TO/S
+ TW=|                     RA  DSM    O(
+ KURI/W|                  N2  DSM    KU/RIOS
+diff --git a/source/17.2Chron.mlxx b/source/17.2Chron.mlxx
+index e4f7eb6..90ee949 100644
+--- a/source/17.2Chron.mlxx
++++ b/source/17.2Chron.mlxx
+@@ -17778,7 +17778,7 @@ TW=N                     RA  GPM    O(
+ *LEUITW=N                N1M GPM    *LEUEI/THS
+ KAI\                     C          KAI/
+ TW=N                     RA  GPM    O(
+-SUNIO/NTWN               V)  PAPGPM EI)MI/           SUN
++SUNIO/NTWN               V9  PAPGPM EI)MI/           SUN
+ SU/NESIN                 N3I ASF    SU/NESIS
+ A)GAQH\N                 A1  ASF    A)GAQO/S
+ TW=|                     RA  DSM    O(
+@@ -19394,7 +19394,7 @@ U(/DATOS                 N3T GSN    U(/DWR
+ TO\                      RA  ASN    O(
+ A)/NW                    D          A)/NW
+ KAI\                     C          KAI/
+-KATHU/QUNEN              VAI AAI3S  EU)QUN/W         KATA
++KATHU/QUNEN              VAI AAI3S  EU)QU/NW         KATA
+ AU)TA\                   RD  APN    AU)TO/S
+ KA/TW                    D          KA/TW
+ PRO\S                    P          PRO/S
+@@ -22563,7 +22563,7 @@ TW=N                     RA  GPM    O(
+ PATE/RWN                 N3  GPM    PATH/R
+ AU)TOU=                  RD  GSM    AU)TO/S
+ KAI\                     C          KAI/
+-E)TA/FH                  VDI API3S  QAP/TW
++E)TA/FH                  VDI API3S  QA/PTW
+ E)N                      P          E)N
+ *GANOZA                  N   DS     *GANOZA
+ META\                    P          META/
+diff --git a/source/18.1Esdras.mlxx b/source/18.1Esdras.mlxx
+index 84ecb7b..9f22c1d 100644
+--- a/source/18.1Esdras.mlxx
++++ b/source/18.1Esdras.mlxx
+@@ -7427,7 +7427,7 @@ E)K                      P          E)K
+ TW=N                     RA  GPM    O(
+ UI(W=N                   N2  GPM    UI(O/S
+ *ADINOU                  N   GSM    *ADI/N
+-*BHN-*IWNAQOU            N   NSM    *BHN-*IWNAQ/AN
++*BHN-*IWNAQOU            N   NSM    *BHN-*IWNAQAN
+ KAI\                     C          KAI/
+ MET'                     P          META/
+ AU)TOU=                  RD  GSM    AU)TO/S
+diff --git a/source/23.TobitS.mlxx b/source/23.TobitS.mlxx
+index b23b424..3503724 100644
+--- a/source/23.TobitS.mlxx
++++ b/source/23.TobitS.mlxx
+@@ -4178,7 +4178,7 @@ GEGRAMME/NHN             VP  XMPASF GRA/FW
+ E)N                      P          E)N
+ TH=|                     RA  DSF    O(
+ BI/BLW|                  N2  DSF    BI/BLOS
+-*MWUSE/WS                N1M GSM    *MWUSE=S
++*MWUSE/WS                N1M GSM    *MWUSH=S
+ DOU=NAI/                 VO  AAN    DI/DWMI
+ SOI                      RP  DS     SU/
+ TH\N                     RA  ASF    O(
+@@ -4225,7 +4225,7 @@ KATA\                    P          KATA/
+ TH\N                     RA  ASF    O(
+ KRI/SIN                  N3I ASF    KRI/SIS
+ TOU=                     RA  GSM    O(
+-*MWUSE/WS                N1M GSM    *MWUSE=S
++*MWUSE/WS                N1M GSM    *MWUSH=S
+ NO/MOU                   N2  GSM    NO/MOS
+ A)P'                     P          A)PO/
+ E)KEI/NOU                RD  GSM    E)KEI=NOS
+diff --git a/source/24.1Macc.mlxx b/source/24.1Macc.mlxx
+index 6792296..969a1d4 100644
+--- a/source/24.1Macc.mlxx
++++ b/source/24.1Macc.mlxx
+@@ -9314,7 +9314,7 @@ AU)TW=N                  RD  GPM    AU)TO/S
+ TRAUMATI/AI              N1T NPM    TRAUMATI/AS
+ POLLOI/                  A1  NPM    POLU/S
+ KAI\                     C          KAI/
+-H)|XMALW/TISAN           VAI AAI3P  AI)|XMALWTI/ZW
++H)|XMALW/TISAN           VAI AAI3P  AI)XMALWTI/ZW
+ TA\S                     RA  APF    O(
+ GUNAI=KAS                N3K APF    GUNH/
+ AU)TW=N                  RD  GPM    AU)TO/S
+diff --git a/source/26.3Macc.mlxx b/source/26.3Macc.mlxx
+index 378d36c..bf302e3 100644
+--- a/source/26.3Macc.mlxx
++++ b/source/26.3Macc.mlxx
+@@ -3340,7 +3340,7 @@ OI)KTROTA/THN            A1A ASFS   OI)KTRO/S
+ QEWRI/AN                 N1A ASF    QEWRI/A
+ PROSDOKW=NTA             V3  PAPNPN DOKA/W           PROS
+ TH\N                     RA  ASF    O(
+-PRWI/AN                  A1A ASF    PRW/I|OS
++PRWI/AN                  A1A ASF    PRW/I+OS
+ META\                    P          META/
+ SPOUDH=S                 N1  GSF    SPOUDH/
+ 
+diff --git a/source/29.Psalms2.mlxx b/source/29.Psalms2.mlxx
+index b4a3974..eaf9acf 100644
+--- a/source/29.Psalms2.mlxx
++++ b/source/29.Psalms2.mlxx
+@@ -16530,7 +16530,7 @@ E)/XOUSIN                V1  PAI3P  E)/XW
+ KAI\                     C          KAI/
+ OU)K                     D          OU)
+ E)NWTISQH/SONTAI         VS  FPI3P  E)NWTI/ZOMAI
+-R(I=NAS                  N3  APF    R(/IS
++R(I=NAS                  N3  APF    R(I/S
+ E)/XOUSIN                V1  PAI3P  E)/XW
+ KAI\                     C          KAI/
+ OU)K                     D          OU)
+@@ -19248,7 +19248,7 @@ A)NALH/MYETAI            VF  FMI3S  LAMBA/NW         A)NA
+ KAI\                     C          KAI/
+ O(DO\N                   N2  ASF    O(DO/S
+ A(MARTWLW=N              A1B GPM    A(MARTWLO/S
+-A)FANIEI=                VF2 FAI3S  I/(ZW            A)PO  A)NA
++A)FANIEI=                VF2 FAI3S  I(/ZW            A)PO  A)NA
+ 
+ Ps 145:10
+ BASILEU/SEI              VF  FAI3S  BASILEU/W
+diff --git a/source/34.Job.mlxx b/source/34.Job.mlxx
+index c7d9e69..30242b0 100644
+--- a/source/34.Job.mlxx
++++ b/source/34.Job.mlxx
+@@ -6440,7 +6440,7 @@ AU)TOU=                  RD  GSM    AU)TO/S
+ QA/NATOS                 N2  NSM    QA/NATOS
+ 
+ Job 18:14
+-E)KRAGEI/H               VD  APO3S  R(/GNUMI         E)K
++E)KRAGEI/H               VD  APO3S  R(H/GNUMI         E)K
+ DE\                      X          DE/
+ E)K                      P          E)K
+ DIAI/THS                 N1S GSF    DI/AITA
+@@ -9445,7 +9445,7 @@ SKIA\                    N1A NSF    SKIA/
+ QANA/TOU                 N2  GSM    QA/NATOS
+ 
+ Job 28:4
+-DIAKOPH\                 N1  NSF    DIAKOPH/)A
++DIAKOPH\                 N1  NSF    DIAKOPH/
+ XEIMA/RROU               N2  GSM    XEIMA/RROUS
+ A)PO\                    P          A)PO/
+ KONI/AS                  N1A GSF    KONI/A
+diff --git a/source/37.PsSol.mlxx b/source/37.PsSol.mlxx
+index 5ab7c64..e1ec2c5 100644
+--- a/source/37.PsSol.mlxx
++++ b/source/37.PsSol.mlxx
+@@ -3416,7 +3416,7 @@ H(SU/XION                A1B ASM    H(SU/XIOS
+ MISOU=SAN                V2  PAPASF MISE/W
+ A)DI/KOUS                A1B APM    A)/DIKOS
+ KAI\                     C          KAI/
+-KATEUQU/NAI              VA  AAN    EU)QUN/W         KATA
++KATEUQU/NAI              VA  AAN    EU)QU/NW         KATA
+ KU/RIOS                  N2  NSM    KU/RIOS
+ A)/NDRA                  N3  ASM    A)NH/R
+ POIOU=NTA                V2  PAPASM POIE/W
+@@ -4210,7 +4210,7 @@ E)/RGA                   N2N APN    E)/RGON
+ TW=N                     RA  GPM    O(
+ XEIRW=N                  N3  GPF    XEI/R
+ MOU                      RP  GS     E)GW/
+-KATEU/QUNON              VA  AAD2S  EU)QUN/W         KATA
++KATEU/QUNON              VA  AAD2S  EU)QU/NW         KATA
+ E)N                      P          E)N
+ TO/PW|                   N2  DSM    TO/POS
+ SOU                      RP  GS     SU/
+@@ -5441,7 +5441,7 @@ KAI\                     C          KAI/
+ I)SXU/OS                 N3U GSF    I)SXU/S
+ 
+ PsSol 18:8
+-KATEUQU=NAI              VA  AAN    EU)QUN/W         KATA
++KATEUQU=NAI              VA  AAN    EU)QU/NW         KATA
+ A)/NDRA                  N3  ASM    A)NH/R
+ E)N                      P          E)N
+ E)/RGOIS                 N2N DPN    E)/RGON
+diff --git a/source/57.Ezek1.mlxx b/source/57.Ezek1.mlxx
+index 12ef432..73896b1 100644
+--- a/source/57.Ezek1.mlxx
++++ b/source/57.Ezek1.mlxx
+@@ -4183,7 +4183,7 @@ LE/GWN                   V1  PAPNSM LE/GW
+ PEPOI/HKA                VX  XAI1S  POIE/W
+ KAQW\S                   D          KAQW/S
+ E)NETEI/LW               VAI AMI2S  TE/LLOMAI        E)N
+-MOI                      RP  DS     
++MOI                      RP  DS     E)GW/
+ 
+ Ezek 10:1
+ KAI\                     C          KAI/
