@@ -180,7 +180,7 @@ def to_unicode(betacode,t):
     if remain:
         print unicode_txt.encode("utf-8"), remain
         raise Exception
-    unicode_txt = unicodedata.normalize("NFKC", unicode_txt)
+    unicode_txt = unicodedata.normalize("NFC", unicode_txt)
     return unicode_txt
 
 def convert_file(path,t):
