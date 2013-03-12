@@ -1,0 +1,27 @@
+61-Mt gospel synoptic
+62-Mk gospel synoptic
+63-Lk gospel synoptic lukeacts
+64-Jn gospel
+65-Ac acts lukeacts
+66-Ro pauline
+67-1Co pauline
+68-2Co pauline
+69-Ga pauline
+70-Eph pauline
+71-Php pauline
+72-Col pauline
+73-1Th pauline
+74-2Th pauline
+75-1Ti pauline pastoral
+76-2Ti pauline pastoral
+77-Tit pauline pastoral
+78-Phm pauline
+79-Heb catholic
+80-Jas catholic
+81-1Pe catholic
+82-2Pe catholic
+83-1Jn catholic
+84-2Jn catholic
+85-3Jn catholic
+86-Jud catholic
+87-Re revelation

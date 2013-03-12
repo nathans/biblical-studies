@@ -5,6 +5,10 @@ load-sblgnt.py takes the resulting output from above and loads it into an NLTK
 Text object, and runs the collocations() and generate() functions as an 
 example.
 
+morphgnt-corpus.py creates a tagged NLTK corpus from the MorphGNT files. It 
+expects them to be located at local path "source/" and will output the files 
+in "morphgnt-corpus/".
+
 Requirements:
 These scripts require NLTK 2.0 or higher (with its attendant requirements).
 To quickly install the requirements with pip:
