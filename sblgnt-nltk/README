@@ -3,9 +3,10 @@ It expects them to be located at local path "source/" and will output the
 files in "morphgnt-corpus/". These files can then be loaded as a tagged, 
 categorized corpus using something like the following:
 
-  >>> import koine, nltk
-  >>> sblgnt = nltk.corpus.reader.TaggedCorpusReader('sblgnt-corpus/','.*',
-  encoding=u'utf8',tag_mapping_function=koine.simplify_tag)
+>>> import koine, nltk
+>>> sblgnt = nltk.corpus.reader.CategorizedTaggedCorpusReader('sblgnt-corpus/'
+    ,'.*',encoding=u'utf8',tag_mapping_function=koine.simplify_tag,
+    cat_file='cats.txt')
 
 Requirements:
 These scripts require NLTK 2.0 or higher (with its attendant requirements).

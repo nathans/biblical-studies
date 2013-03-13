@@ -47,7 +47,7 @@ def convert(path):
             punct = fields[3][-1]
             p_token = punct + '/' + punct
             tokens.append(p_token)
-            if punct == ".":
+            if punct != ",":
                 tokens.append("\n")
 
     text = ' '.join(tokens)
