@@ -20,8 +20,7 @@
 
 import codecs
 import os
-
-punctuation = [".",",",";",u"\u00b7"]
+import re
 
 def convert(path):
     "Convert the given file to an NLTK tagged corpus file."
@@ -35,21 +34,21 @@ def convert(path):
     lines = f.readlines()
     f.close()
     for line in lines:
-        fields = line.split()
-        pos = fields[1].strip('-')
-        parse = fields[2].replace('-','')
-        tag = pos
-        if len(parse) > 0:
-            tag += '-' + parse
-        token = fields[4] + '/' + tag
-        tokens.append(token)
-        # Deal with punctuation
-        if fields[3][-1] in punctuation:
-            punct = fields[3][-1]
-            p_token = punct + '/' + punct
-            tokens.append(p_token)
-            if punct != ",":
-                tokens.append("\n")
+        # Handle verse lables
+        if re.match(r"^[A-Z]",line):
+            pass
+        #Empty lines signify verse breaks, which we'll treat as sentence breaks
+        elif re.match(r"\n",line):
+            tokens.append("\n")            
+        else:
+            fields = line.split()
+            pos = fields[1][:3].replace('-','')
+            parse = fields[1][3:].replace('-','')
+            tag = pos
+            if len(parse) > 0:
+                tag += '-' + parse
+            token = fields[0] + '/' + tag
+            tokens.append(token)
 
     text = ' '.join(tokens)
     g = open(out_path,'w')
@@ -57,9 +56,16 @@ def convert(path):
     g.close()
     
 if __name__ == '__main__':
+    # Obtain list of files
     paths = os.listdir('source/')
-    paths.remove('README.md')
+    # Remove meta files
+    paths.remove('README-Unicode')
     paths.remove('.git')
+    paths.remove('*Morph-Coding')
+    paths.remove('*ReadMe.Analysis')
+    paths.remove('0-readme.txt')
+    paths.remove('0-user-declaration.txt')
+
     paths.sort()
     for path in paths:
         convert(path)
