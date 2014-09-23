@@ -20,23 +20,24 @@
 import codecs
 import os
 
-punctuation = [".",",",";",u"\u00b7"]
+punctuation = [".", ",", ";", u"\u00b7"]
+
 
 def convert(path):
     "Convert the given file to an NLTK tagged corpus file."
 
     if not os.path.exists('sblgnt-corpus'):
         os.mkdir('sblgnt-corpus')
-    out_path = 'sblgnt-corpus/' + path.rsplit('-',1)[0]
+    out_path = 'sblgnt-corpus/' + path.rsplit('-', 1)[0]
     print "Converting " + out_path
     tokens = []
-    f = codecs.open('source/' + path,encoding='utf-8')
+    f = codecs.open('source/' + path, encoding='utf-8')
     lines = f.readlines()
     f.close()
     for line in lines:
         fields = line.split()
         pos = fields[1].strip('-')
-        parse = fields[2].replace('-','')
+        parse = fields[2].replace('-', '')
         tag = pos
         if len(parse) > 0:
             tag += '-' + parse
@@ -51,10 +52,10 @@ def convert(path):
                 tokens.append("\n")
 
     text = ' '.join(tokens)
-    g = open(out_path,'w')
+    g = open(out_path, 'w')
     g.write(text.encode('utf-8'))
     g.close()
-    
+
 if __name__ == '__main__':
     paths = os.listdir('source/')
     paths.remove('README.md')
