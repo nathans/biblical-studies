@@ -22,28 +22,29 @@ import codecs
 import os
 import re
 
+
 def convert(path):
     "Convert the given file to an NLTK tagged corpus file."
 
     if not os.path.exists('lxxm-corpus'):
         os.mkdir('lxxm-corpus')
-    out_path = 'lxxm-corpus/' + path.rsplit('-',1)[0]
+    out_path = 'lxxm-corpus/' + path.rsplit('-', 1)[0]
     print "Converting " + out_path
     tokens = []
-    f = codecs.open('source/' + path,encoding='utf-8')
+    f = codecs.open('source/' + path, encoding='utf-8')
     lines = f.readlines()
     f.close()
     for line in lines:
         # Handle verse lables
-        if re.match(r"^[A-Z]",line):
+        if re.match(r"^[A-Z]", line):
             pass
-        #Empty lines signify verse breaks, which we'll treat as sentence breaks
-        elif re.match(r"\n",line):
-            tokens.append("\n")            
+        # Empty lines signify verse breaks, treat as sentence breaks
+        elif re.match(r"\n", line):
+            tokens.append("\n")
         else:
             fields = line.split()
-            pos = fields[1][:3].replace('-','')
-            parse = fields[1][3:].replace('-','')
+            pos = fields[1][:3].replace('-', '')
+            parse = fields[1][3:].replace('-', '')
             tag = pos
             if len(parse) > 0:
                 tag += '-' + parse
@@ -51,10 +52,10 @@ def convert(path):
             tokens.append(token)
 
     text = ' '.join(tokens)
-    g = open(out_path,'w')
+    g = open(out_path, 'w')
     g.write(text.encode('utf-8'))
     g.close()
-    
+
 if __name__ == '__main__':
     # Obtain list of files
     paths = os.listdir('source/')
