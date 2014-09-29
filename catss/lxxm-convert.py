@@ -259,7 +259,7 @@ def convert_file(path, t):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description="Convert the CATSS LXXM text to unicode")
-    subs = parser.add_subs(dest='command')
+    subs = parser.add_subparsers(dest='command')
     # Download
     parser_dl = subs.add_parser("download", help="Download the files")
     # Patch
