@@ -17,7 +17,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import codecs
 import os
 
 import pysblgnt
@@ -36,7 +35,7 @@ def convert(book_num):
     out_path = 'sblgnt-corpus/' + book_path.rsplit('-', 1)[0]
     print("Converting " + out_path)
     tokens = []
-        
+
     for line in pysblgnt.morphgnt_rows(book_num):
         pos = line["ccat-pos"].strip('-')
         parse = line["ccat-parse"].replace('-', '')
