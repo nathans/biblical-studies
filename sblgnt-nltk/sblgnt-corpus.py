@@ -3,7 +3,7 @@
 # sblgnt-corpus.py
 # Create a tagged NLTK corpus from the SBLGNT
 #
-# (c) 2013 Nathan D. Smith <nathan@smithfam.info>
+# (c) 2013, 2015 Nathan D. Smith <nathan@smithfam.info>
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -20,32 +20,34 @@
 import codecs
 import os
 
-punctuation = [".", ",", ";", u"\u00b7"]
+import pysblgnt
+
+punctuation = [".", ",", ";", "\u00b7"]
 
 
-def convert(path):
+def convert(book_num):
     "Convert the given file to an NLTK tagged corpus file."
 
     if not os.path.exists('sblgnt-corpus'):
         os.mkdir('sblgnt-corpus')
-    out_path = 'sblgnt-corpus/' + path.rsplit('-', 1)[0]
-    print "Converting " + out_path
+
+    # Use the built-in filename function, but omit the leading path
+    book_path = pysblgnt.morphgnt_filename(book_num).split("/")[1]
+    out_path = 'sblgnt-corpus/' + book_path.rsplit('-', 1)[0]
+    print("Converting " + out_path)
     tokens = []
-    f = codecs.open('source/' + path, encoding='utf-8')
-    lines = f.readlines()
-    f.close()
-    for line in lines:
-        fields = line.split()
-        pos = fields[1].strip('-')
-        parse = fields[2].replace('-', '')
+        
+    for line in pysblgnt.morphgnt_rows(book_num):
+        pos = line["ccat-pos"].strip('-')
+        parse = line["ccat-parse"].replace('-', '')
         tag = pos
         if len(parse) > 0:
             tag += '-' + parse
-        token = fields[4] + '/' + tag
+        token = line["word"] + '/' + tag
         tokens.append(token)
         # Deal with punctuation
-        if fields[3][-1] in punctuation:
-            punct = fields[3][-1]
+        if line["text"][-1] in punctuation:
+            punct = line["text"][-1]
             p_token = punct + '/' + punct
             tokens.append(p_token)
             if punct != ",":
@@ -53,13 +55,9 @@ def convert(path):
 
     text = ' '.join(tokens)
     g = open(out_path, 'w')
-    g.write(text.encode('utf-8'))
+    g.write(text)
     g.close()
 
 if __name__ == '__main__':
-    paths = os.listdir('source/')
-    paths.remove('README.md')
-    paths.remove('.git')
-    paths.sort()
-    for path in paths:
-        convert(path)
+    for book_num in range(27):
+        convert(book_num+1)
