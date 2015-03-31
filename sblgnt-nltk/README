@@ -1,15 +1,14 @@
-sblgnt-corpus.py creates a tagged NLTK corpus from the MorphGNT [0] files. 
-It expects them to be located at local path "source/" and will output the 
-files in "morphgnt-corpus/". These files can then be loaded as a tagged, 
-categorized corpus using something like the following:
+sblgnt-corpus.py creates a tagged NLTK corpus from the MorphGNT [0]
+files.  It uses the py-sblgnt module for source data and will output
+the files in "morphgnt-corpus/". These files can then be loaded as a
+tagged, categorized corpus using something like the following:
 
 >>> import koine, nltk
 >>> sblgnt = nltk.corpus.reader.CategorizedTaggedCorpusReader('sblgnt-corpus/'
     ,'.*',encoding=u'utf8',tag_mapping_function=koine.simplify_tag,
     cat_file='cats.txt')
 
-Requirements:
-These scripts require NLTK 2.0 or higher (with its attendant requirements).
+Requirements: These scripts require Python 3, NLTK 3.0, and py-sblgnt.
 To quickly install the requirements with pip:
 
     $ pip install -r requirements.txt
