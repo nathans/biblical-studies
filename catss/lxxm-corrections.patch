@@ -37,15 +37,6 @@ diff --git a/source/13.2Sam.mlxx b/source/13.2Sam.mlxx
 index 42b8a81..f74ccfb 100644
 --- a/source/13.2Sam.mlxx
 +++ b/source/13.2Sam.mlxx
-@@ -277,7 +277,7 @@ W(=DE                    D          W(=DE
- 2Sam/K 1:11
- KAI\                     C          KAI/
- E)KRA/THSEN              VAI AAI3S  KRATE/W
--*DAUID                   N   NSM    *DAVID
-+*DAUID                   N   NSM    *DAUID
- TW=N                     RA  GPN    O(
- I(MATI/WN                N2N GPN    I(MA/TION
- AU)TOU=                  RD  GSM    AU)TO/S
 @@ -12873,7 +12873,7 @@ A)PH/GCATO               VAI AMI3S  A)/GXOMAI        A)PO
  KAI\                     C          KAI/
  A)PE/QANEN               VBI AAI3S  QNH/SKW          A)PO
@@ -86,15 +77,6 @@ diff --git a/source/17.2Chron.mlxx b/source/17.2Chron.mlxx
 index e4f7eb6..90ee949 100644
 --- a/source/17.2Chron.mlxx
 +++ b/source/17.2Chron.mlxx
-@@ -17778,7 +17778,7 @@ TW=N                     RA  GPM    O(
- *LEUITW=N                N1M GPM    *LEUEI/THS
- KAI\                     C          KAI/
- TW=N                     RA  GPM    O(
--SUNIO/NTWN               V)  PAPGPM EI)MI/           SUN
-+SUNIO/NTWN               V9  PAPGPM EI)MI/           SUN
- SU/NESIN                 N3I ASF    SU/NESIS
- A)GAQH\N                 A1  ASF    A)GAQO/S
- TW=|                     RA  DSM    O(
 @@ -19394,7 +19394,7 @@ U(/DATOS                 N3T GSN    U(/DWR
  TO\                      RA  ASN    O(
  A)/NW                    D          A)/NW
