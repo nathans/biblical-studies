@@ -1,10 +1,10 @@
-#! /usb/bin/env python
+#! /usb/bin/env python3
 #
 # lxxm-corpus.py
 # Create a tagged NLTK corpus from the LXXM
 # Derived from sblgnt-corpus.py
 #
-# (c) 2013, 2014 Nathan D. Smith <nathan@smithfam.info>
+# (c) 2013, 2014, 2016 Nathan D. Smith <nathan@smithfam.info>
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -29,7 +29,7 @@ def convert(path):
     if not os.path.exists('lxxm-corpus'):
         os.mkdir('lxxm-corpus')
     out_path = 'lxxm-corpus/' + path.rsplit('-', 1)[0]
-    print "Converting " + out_path
+    print("Converting " + out_path)
     tokens = []
     f = codecs.open('source/' + path, encoding='utf-8')
     lines = f.readlines()
@@ -53,7 +53,7 @@ def convert(path):
 
     text = ' '.join(tokens)
     g = open(out_path, 'w')
-    g.write(text.encode('utf-8'))
+    g.write(text)
     g.close()
 
 if __name__ == '__main__':
