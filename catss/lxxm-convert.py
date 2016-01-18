@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import argparse
-import beta2unicode
+from greekutils import beta2unicode
 import codecs
 import os
 import re
@@ -170,7 +170,7 @@ def download_lxxm():
             urllib.urlretrieve(url, 'source/' + os.path.basename(url))
 
 
-def to_unicode(betacode, t):
+def to_unicode(betacode):
     "Convert the given betacode and returns equivalent unicode"
 
     # Correct for final sigma
@@ -179,16 +179,11 @@ def to_unicode(betacode, t):
         betacode = betacode.replace("S ", "S\n ")
     if betacode.endswith('S'):
         betacode += "\n"
-    unicode_txt, remain = t.convert(betacode)
-    # Any characters not handled correctly with be printed with an Exception
-    if remain:
-        print unicode_txt.encode("utf-8"), remain
-        raise Exception
-    unicode_txt = unicodedata.normalize("NFC", unicode_txt)
-    return unicode_txt
+    unicode_txt = u"%s" % beta2unicode.convert(betacode)
+    return unicodedata.normalize("NFC", unicode_txt)
 
 
-def convert_file(path, t):
+def convert_file(path):
     "Convert the contents of the file from betacode to unicode"
 
     if not os.path.exists('out'):
@@ -226,8 +221,8 @@ def convert_file(path, t):
             # Replace whitespace in morph with -
             morph = morph.replace(" ", "-")
 
-            word = to_unicode(beta_word, t)
-            output = word + " " + morph
+            word = to_unicode(beta_word)
+            output = u"%s %s" % (word, morph)
             # Add each part of the root
             for part in beta_root:
                 # Correct for '+' in root in some instances
@@ -239,7 +234,7 @@ def convert_file(path, t):
                     and ("+" not in beta_word)):
                     crasis = True
                     part = part.replace("+", " ")
-                rt = to_unicode(part, t)
+                rt = to_unicode(part)
                 if crasis:
                     rt = rt.replace(" ", "+")
                 output += " " + rt
@@ -279,8 +274,7 @@ if __name__ == '__main__':
     if args.command == "patch" or args.command == "all":
         subprocess.call("patch -p1 < lxxm-corrections.patch", shell=True)
     if args.command == "convert" or args.command == "all":
-        t = beta2unicode.beta2unicodeTrie()
         for text in texts:
-            convert_file(text, t)
+            convert_file(text)
     if args.command == "rename" or args.command == "all":
         rename()
