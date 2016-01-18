@@ -1,8 +1,8 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 #
 # lxxm-convert.py
 # Download the CATSS LXXM files and convert them from betacode to unicode
-# (c) 2013, 2014 Nathan D. Smith <nathan@smithfam.info>
+# (c) 2013, 2014, 2016 Nathan D. Smith <nathan@smithfam.info>
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@ import os
 import re
 import subprocess
 import unicodedata
-import urllib
+import urllib.request, urllib.parse, urllib.error
 
 readme = """
 The accompanying files are distributed by the Center for Computer
@@ -120,7 +120,7 @@ def concatenate(text1, text2):
     file2_txt = file2.read()
     file2.close()
     file1 = open('out/' + text1, "a")
-    file1.write(file2_txt.encode("utf-8"))
+    file1.write(file2_txt)
     file1.close()
     os.remove('out/' + text2)
 
@@ -159,15 +159,15 @@ def rename():
 def download_lxxm():
     "Download the collection of lxxmorph files"
 
-    print "Retrieving texts"
-    print readme
+    print("Retrieving texts")
+    print(readme)
     if not os.path.exists('source/'):
         os.mkdir('source')
     for text in texts:
         url = base_url + text
         if not os.path.exists('source/' + os.path.basename(url)):
-            print text
-            urllib.urlretrieve(url, 'source/' + os.path.basename(url))
+            print(text)
+            urllib.request.urlretrieve(url, 'source/' + os.path.basename(url))
 
 
 def to_unicode(betacode):
@@ -179,7 +179,7 @@ def to_unicode(betacode):
         betacode = betacode.replace("S ", "S\n ")
     if betacode.endswith('S'):
         betacode += "\n"
-    unicode_txt = u"%s" % beta2unicode.convert(betacode)
+    unicode_txt = beta2unicode.convert(betacode)
     return unicodedata.normalize("NFC", unicode_txt)
 
 
@@ -189,7 +189,7 @@ def convert_file(path):
     if not os.path.exists('out'):
         os.mkdir('out')
     out_path = "out/" + path.rsplit(".", 1)[0] + ".txt"
-    print out_path
+    print(out_path)
     out_text = ""
     # Book, chapter, verse, and (all together) refrent not implemented yet
     # book = path[0:2]
@@ -214,7 +214,7 @@ def convert_file(path):
             morph = word_line.group('morph')
             # Ensure that morph tags are not missed by the parser
             if (not morph) or (morph == "          "):
-                print "Missed morph"
+                print("Missed morph")
                 raise Exception
             beta_root = word_line.group('root').split()
 
@@ -222,7 +222,7 @@ def convert_file(path):
             morph = morph.replace(" ", "-")
 
             word = to_unicode(beta_word)
-            output = u"%s %s" % (word, morph)
+            output = "{} {}".format(word, morph)
             # Add each part of the root
             for part in beta_root:
                 # Correct for '+' in root in some instances
@@ -244,11 +244,11 @@ def convert_file(path):
             out_text += line
 
         elif line != "\n":
-            print "Missed line: " + line
+            print("Missed line: " + line)
             raise Exception
 
     o = open(out_path, "w")
-    o.write(out_text.encode("utf-8"))
+    o.write(out_text)
     o.close()
 
 if __name__ == '__main__':
