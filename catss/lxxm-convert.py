@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import argparse
-from greekutils import beta2unicode
+from cltk.corpus.greek.beta_to_unicode import Replacer
 import codecs
 import os
 import re
@@ -81,7 +81,7 @@ texts = ["01.Gen.1.mlxx",
          "38.Hosea.mlxx",
          "39.Micah.mlxx",
          "40.Amos.mlxx",
-         "41Joel.mlxx",
+         "41.Joel.mlxx",
          "42.Jonah.mlxx",
          "43.Obadiah.mlxx",
          "44.Nahum.mlxx",
@@ -179,7 +179,8 @@ def to_unicode(betacode):
         betacode = betacode.replace("S ", "S\n ")
     if betacode.endswith('S'):
         betacode += "\n"
-    unicode_txt = beta2unicode.convert(betacode)
+    replacer = Replacer()
+    unicode_txt = replacer.beta_code(betacode)
     return unicodedata.normalize("NFC", unicode_txt)
 
 
