@@ -128,8 +128,6 @@ def concatenate(text1, text2):
 def rename():
     "Combine and rename the books"
 
-    # Joel rename
-    os.rename("out/41Joel.txt", "out/41.Joel.txt")
     # Genesis
     concatenate("01.Gen.1.txt", "02.Gen.2.txt")
     os.rename("out/01.Gen.1.txt", "out/01.Gen.txt")
