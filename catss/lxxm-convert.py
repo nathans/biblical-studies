@@ -18,7 +18,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import argparse
-from cltk.corpus.greek.beta_to_unicode import Replacer
+from greekutils import beta2unicode
 import codecs
 import os
 import re
@@ -179,8 +179,7 @@ def to_unicode(betacode):
         betacode = betacode.replace("S ", "S\n ")
     if betacode.endswith('S'):
         betacode += "\n"
-    replacer = Replacer()
-    unicode_txt = replacer.beta_code(betacode)
+    unicode_txt = beta2unicode.convert(betacode)
     return unicodedata.normalize("NFC", unicode_txt)
 
 
