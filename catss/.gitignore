@@ -3,3 +3,6 @@ out/
 source/
 new/
 *.pyc
+bin/
+include/
+lib/
