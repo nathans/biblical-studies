@@ -18,13 +18,15 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import argparse
-from greekutils import beta2unicode
 import codecs
 import os
 import re
 import subprocess
 import unicodedata
+
 import urllib.request, urllib.parse, urllib.error
+from greekutils import beta2unicode
+
 
 readme = """
 The accompanying files are distributed by the Center for Computer
